@@ -1,0 +1,165 @@
+{
+  "settings" : {
+    "index" : {
+      "number_of_shards" : 3,
+      "number_of_replicas" : 0,
+      "refresh_interval" : "1s",
+      "sort" : {
+        "field" : "update_time",
+        "order" : "desc"
+      },
+      "translog" : {
+        "flush_threshold_size" : "512mb",
+        "sync_interval" : "120s",
+        "durability" : "async"
+      },
+      "merge" : {
+        "scheduler" : {
+          "max_thread_count" : "1"
+        }
+      },
+      "analysis": {
+        "analyzer": {
+          "pinyin_analyzer": {
+            "type": "custom",
+            "tokenizer": "ngram_pinyin",
+            "filter": [
+              "edge_filter"
+            ]
+          },
+          "lc_pinyin_analyzer": {
+            "type": "custom",
+            "tokenizer": "ik_max_word",
+            "filter": [
+              "pinyin_filter"
+            ]
+          }
+        },
+        "tokenizer": {
+          "ngram_pinyin": {
+            "type": "pinyin",
+            "first_letter": "prefix",
+            "keep_separate_first_letter": false,
+            "keep_first_letter": true,
+            "padding_char": " ",
+            "lowercase": true,
+            "keep_joined_full_pinyin": true,
+            "keep_full_pinyin": false,
+            "keep_original": true,
+            "limit_first_letter_length": 16,
+            "keep_none_chinese_together": true
+          }
+        },
+        "filter": {
+          "pinyin_filter": {
+            "type": "pinyin",
+            "first_letter": "prefix",
+            "keep_separate_first_letter": false,
+            "keep_first_letter": true,
+            "padding_char": " ",
+            "lowercase": true,
+            "keep_joined_full_pinyin": true,
+            "keep_full_pinyin": false,
+            "keep_original": true,
+            "limit_first_letter_length": 16,
+            "keep_none_chinese_together": true
+          },
+          "edge_filter": {
+            "type": "edge_ngram",
+            "min_gram": 1,
+            "max_gram": 20
+          }
+        }
+      }
+    }
+  },
+  "mappings" : {
+    "properties" : {
+      "id" : {
+        "type" : "integer"
+      },
+      "actor_id" : {
+        "type" : "integer"
+      },
+      "region" : {
+        "type": "keyword"
+      },
+      "available_count" : {
+        "type" : "integer"
+      },
+      "priority" : {
+        "type" : "integer"
+      },
+      "name" : {
+        "type": "keyword",
+        "fields": {
+          "cn":{
+            "type":"text",
+            "boost":10,
+            "search_analyzer": "ik_smart",
+            "analyzer":"ik_smart"
+          },
+          "lc_pinyin": {
+            "type": "text",
+            "boost": 20,
+            "store": true,
+            "term_vector": "with_positions_offsets",
+            "analyzer": "lc_pinyin_analyzer",
+            "search_analyzer": "ik_smart"
+          },
+          "pinyin": {
+            "type": "text",
+            "boost": 20,
+            "store": true,
+            "term_vector": "with_positions_offsets",
+            "analyzer": "pinyin_analyzer"
+          }
+        }
+      },
+      "alias" : {
+        "type": "keyword",
+        "fields": {
+          "cn":{
+            "type":"text",
+            "boost":5,
+            "search_analyzer": "ik_smart",
+            "analyzer":"ik_smart"
+          },
+          "pinyin": {
+            "type": "text",
+            "boost": 10,
+            "store": true,
+            "term_vector": "with_positions_offsets",
+            "analyzer": "pinyin_analyzer",
+            "search_analyzer": "ik_smart"
+          },
+          "lc_pinyin": {
+            "type": "text",
+            "boost": 20,
+            "store": true,
+            "term_vector": "with_positions_offsets",
+            "analyzer": "lc_pinyin_analyzer",
+            "search_analyzer": "ik_smart"
+          }
+        }
+      },
+      "disable" : {
+        "type": "byte"
+      },
+      "ranking": {
+        "type": "integer"
+      },
+      "create_time" : {
+        "type" : "date",
+        "format":"strict_date_optional_time||epoch_millis||uuuu-MM-dd HH:mm:ss||uuuu-MM-dd||uuuu-MM||uuuu||uuuu/MM/dd||uuuu/MM"
+      },
+      "update_time" : {
+        "type" : "date",
+        "format":"strict_date_optional_time||epoch_millis||uuuu-MM-dd HH:mm:ss||uuuu-MM-dd||uuuu-MM||uuuu||uuuu/MM/dd||uuuu/MM"
+      },
+      "version_id": {
+        "type" : "long"
+      }
+    }
+  }
+}

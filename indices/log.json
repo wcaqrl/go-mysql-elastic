@@ -1,0 +1,84 @@
+{
+  "settings" : {
+    "index" : {
+      "number_of_shards" : 3,
+      "number_of_replicas" : 0,
+      "refresh_interval" : "1s",
+      "translog" : {
+        "flush_threshold_size" : "512mb",
+        "sync_interval" : "120s",
+        "durability" : "async"
+      },
+      "merge" : {
+        "scheduler" : {
+          "max_thread_count" : "1"
+        }
+      }
+    }
+  },
+  "mappings" : {
+    "properties" : {
+      "id" : {
+        "type" : "keyword"
+      },
+      "request_time" : {
+        "type" : "date",
+        "format":"strict_date_optional_time||epoch_millis||uuuu-MM-dd HH:mm:ss||uuuu-MM-dd||uuuu-MM||uuuu||uuuu/MM/dd||uuuu/MM"
+      },
+      "domain" : {
+        "type": "text",
+        "fields": {
+          "keyword":{
+            "type":"keyword"
+          }
+        }
+      },
+      "http_method" : {
+        "type": "keyword"
+      },
+      "request_route" : {
+        "type": "text",
+        "fields": {
+          "keyword":{
+            "type":"keyword"
+          }
+        }
+      },
+      "request_param" : {
+        "type": "text",
+        "fields": {
+          "keyword":{
+            "type":"keyword"
+          }
+        }
+      },
+      "status" : {
+        "type": "short"
+      },
+      "response_time" : {
+        "type": "float",
+        "fields": {
+          "keyword":{
+            "type":"keyword"
+          }
+        }
+      },
+      "user_agent" : {
+        "type": "text",
+        "fields": {
+          "keyword":{
+            "type":"keyword"
+          }
+        }
+      },
+      "real_ip" : {
+        "type": "text",
+        "fields": {
+          "keyword":{
+            "type":"keyword"
+          }
+        }
+      }
+    }
+  }
+}

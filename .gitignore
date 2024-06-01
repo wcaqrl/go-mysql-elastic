@@ -1,0 +1,10 @@
+go-mysql-elasticsearch.exe
+go-mysql-elasticsearch
+.idea/
+logs
+storage
+.env
+app.ini
+access.log
+bin/app.ini
+dict
